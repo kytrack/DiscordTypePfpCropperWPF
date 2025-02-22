@@ -1,26 +1,106 @@
 ﻿<Window x:Class="WpfApp7.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Mozgatható és Méretezhető Négyzet" Height="600" Width="800">
-    <Grid>
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="Mozgatható és Zoomolható Kép"
+        Height="550" Width="700"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        AllowsTransparency="True">
+    <Grid Background="#313338">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Canvas x:Name="MainCanvas" Background="Gray">
-            <!-- Kép -->
-            <Image x:Name="BackgroundImage" Source="nemdohanyzonoitulaj.jpg"
-                    Canvas.Left="50" Canvas.Top="50"/>
+        <Canvas Width="550" Height="400"
+                x:Name="MainCanvas"
+                Margin="0,0,0,0" 
+                Background="#1C1D20"
+                ClipToBounds="True">
+            <Image Cursor="Hand"
+                   x:Name="BackgroundImage"
+                   RenderTransformOrigin="0,0">
+                <Image.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform x:Name="ImageScaleTransform"/>
+                        <TranslateTransform x:Name="ImageTranslateTransform"/>
+                    </TransformGroup>
+                </Image.RenderTransform>
+            </Image>
 
-            <!-- Mozgatható négyzet -->
-            <Rectangle x:Name="MovableRect" Width="100" Height="100" Fill="Red"
-                       Stroke="Black" StrokeThickness="2"
-                       Canvas.Left="150" Canvas.Top="150"/>
+            <Rectangle Width="550" Height="400" Fill="#80000000" IsHitTestVisible="False" >
+                <Rectangle.OpacityMask>
+                    <DrawingBrush>
+                        <DrawingBrush.Drawing>
+                            <GeometryDrawing Brush="White">
+                                <GeometryDrawing.Geometry>
+                                    <CombinedGeometry GeometryCombineMode="Exclude">
+                                        <CombinedGeometry.Geometry1>
+                                            <RectangleGeometry Rect="0,0 550,400"/>
+                                        </CombinedGeometry.Geometry1>
+                                        <CombinedGeometry.Geometry2>
+                                            <EllipseGeometry 
+                                        Center="275,200" 
+                                        RadiusX="200" 
+                                        RadiusY="200"/>
+                                        </CombinedGeometry.Geometry2>
+                                    </CombinedGeometry>
+                                </GeometryDrawing.Geometry>
+                            </GeometryDrawing>
+                        </DrawingBrush.Drawing>
+                    </DrawingBrush>
+                </Rectangle.OpacityMask>
+            </Rectangle>
+
+            <Ellipse x:Name="SelectionRect" 
+             Width="400" 
+             Height="400" 
+             Stroke="White" 
+             StrokeThickness="5"
+             Canvas.Left="75" 
+             Canvas.Top="0"
+             Panel.ZIndex="1"/>
         </Canvas>
 
-        <!-- Méretet állító Slider -->
-        <Slider x:Name="SizeSlider" Grid.Row="1" Minimum="50" Maximum="300" Value="100"
-                Margin="20" Width="200"/>
+        <StackPanel HorizontalAlignment="Center"
+                    Grid.Row="1" 
+                    Orientation="Horizontal"
+                    Margin="0,0,0,20">
+        <materialDesign:PackIcon Kind="Image"
+                                 Height="25"
+                                 Width="25"
+                                 Foreground="Gray"
+                                 VerticalAlignment="Center"/>
+        <Slider x:Name="ZoomSlider" 
+                Minimum="1" 
+                Maximum="3" 
+                Value="1"
+                Width="200"
+                VerticalAlignment="Center" Margin="10"/>
+            <materialDesign:PackIcon Kind="Image"
+                                     Height="40"
+                                     Width="40"
+                                     Foreground="Gray"
+                                     VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <Border Grid.Row="2" Background="#2B2D31"/>
+        <StackPanel HorizontalAlignment="Right" Margin="15" Orientation="Horizontal" Grid.Row="2">
+        <Button x:Name="btnCancel"
+                Content="Mégse"
+                Click="btnCancel_Click"
+                Width="120"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                Foreground="White"/>
+        <Button x:Name="btnSave"
+                Content="Alkamazás"
+                Click="btnSave_Click"
+                Width="120"/>
+        </StackPanel>
+
     </Grid>
 </Window>
